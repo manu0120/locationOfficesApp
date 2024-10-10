@@ -34,7 +34,9 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/assets",
+              "src/assets/config.json"
             ],
             "styles": [
               "src/styles.css"
