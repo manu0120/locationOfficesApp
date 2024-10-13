@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MapMarker } from '@angular/google-maps';
 
 @Component({
   selector: 'app-root',
@@ -63,7 +64,41 @@ export class AppComponent {
     { lat: 40.438056, lng: -3.698611 }
   ];
 
+  map!: google.maps.Map;
+  infoWindow!: google.maps.InfoWindow;
+
   ngOnInit() {
+    const contentString = `
+    <div>
+      <h1>Uluru</h1>
+      <div>
+        <p>
+          <b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large
+          sandstone rock formation in the southern part of the
+          Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi)
+          south west of the nearest large town, Alice Springs; 450&#160;km
+          (280&#160;mi) by road. Kata Tjuta and Uluru are the two major
+          features of the Uluru - Kata Tjuta National Park. Uluru is
+          sacred to the Pitjantjatjara and Yankunytjatjara, the
+          Aboriginal people of the area. It has many springs, waterholes,
+          rock caves and ancient paintings. Uluru is listed as a World
+          Heritage Site.
+        </p>
+        <p>
+          Attribution: Uluru,
+          <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">
+            https://en.wikipedia.org/w/index.php?title=Uluru
+          </a>
+          (last visited June 22, 2009).
+        </p>
+      </div>
+    </div>`;
+    this.infoWindow = new google.maps.InfoWindow({
+      content: contentString,
+      ariaLabel: "Uluru",
+    });
+    // this.infoWindow = new google.maps.InfoWindow();
+
     const parser = new DOMParser();
     // this is an SVG string of a house icon, but feel free to use whatever SVG icon you'd like
     const svgGreenString = `<svg fill="#000000" width="40px" height="40px" viewBox="0 0 24 24" id="place" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line">
@@ -92,14 +127,36 @@ export class AppComponent {
     </svg>`;
 
     this.officeLocationsGreen.forEach((location) => {
-      location.content = parser.parseFromString(svgGreenString, "image/svg+xml").documentElement;
+      location.icon = {
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgGreenString),
+        scaledSize: new google.maps.Size(40, 40)
+      };
     });
     this.officeLocationsRed.forEach((location) => {
-      location.content = parser.parseFromString(svgRedString, "image/svg+xml").documentElement;
+      location.icon = {
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgRedString),
+        scaledSize: new google.maps.Size(40, 40)
+      };
     });
     this.officeLocationsYellow.forEach((location) => {
-      location.content = parser.parseFromString(svgYellowString, "image/svg+xml").documentElement;
+      location.icon = {
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgYellowString),
+        scaledSize: new google.maps.Size(40, 40)
+      };
     });
+
+  }
+
+  onMarkerClick(location: any) {
+    if (!this.infoWindow) {
+      console.error('InfoWindow is not initialized');
+    }
+    console.log('Marker clicked', location);
+    
+    this.infoWindow.setContent(`Lat: ${location.lat}, Lng: ${location.lng}`);
+    
+    this.infoWindow.setPosition({ lat: location.lat, lng: location.lng });
+    this.infoWindow.open();
   }
 
 }

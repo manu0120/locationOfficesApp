@@ -1,24 +1,18 @@
 <h1>Google Maps en Angular 18.</h1>
 <google-map height="600px" width="800px" [options]="options"> 
-  @for (location of officeLocationsGreen; track location) {
-    <map-advanced-marker
-      #markerElem="mapAdvancedMarker"
-      [position]="{ lat: location.lat, lng: location.lng }"
-      [content]="location.content"    
-    />
-  }
-  @for (location of officeLocationsYellow; track location) {
-    <map-advanced-marker
-      #markerElem="mapAdvancedMarker"
-      [position]="{ lat: location.lat, lng: location.lng }"
-      [content]="location.content"
-    />
-  }
-  @for (location of officeLocationsRed; track location) {
-    <map-advanced-marker
-      #markerElem="mapAdvancedMarker"
-      [position]="{ lat: location.lat, lng: location.lng }"
-      [content]="location.content"
-    />
-  }
+  <map-marker *ngFor="let location of officeLocationsGreen"
+              [position]="{ lat: location.lat, lng: location.lng }"
+              icon="https://maps.google.com/mapfiles/ms/icons/red-dot.png"
+              (mapClick)="onMarkerClick(location)">
+  </map-marker>
+  <map-marker *ngFor="let location of officeLocationsYellow"
+              [position]="{ lat: location.lat, lng: location.lng }"
+              icon="https://maps.google.com/mapfiles/ms/icons/yellow-dot.png"
+              (mapClick)="onMarkerClick(location)">
+  </map-marker>
+  <map-marker *ngFor="let location of officeLocationsRed"
+              [position]="{ lat: location.lat, lng: location.lng }"
+              icon="https://maps.google.com/mapfiles/ms/icons/green-dot.png"
+              (mapClick)="onMarkerClick(location)">
+  </map-marker>
 </google-map>
